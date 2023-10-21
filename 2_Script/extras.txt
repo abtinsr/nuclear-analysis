@@ -1,0 +1,150 @@
+
+###########################################
+###########################################
+
+"""
+sns.set_context("talk")
+sns.set_style("ticks", {'axes.grid' : True})
+
+plt.figure(figsize=(15,10))
+
+df = (
+    data_master.copy()
+    .query("Area == @filter_nonnuclear_countries_2000")
+    .reset_index()
+    .drop(columns={'index'})
+    .rename(columns={'Demand_TWh2021':'var'}).query("var > 1")
+)
+
+cat_order = [
+    'Major Increase (15p or more)', 
+    'Moderate Increase (5 to 15p)',  
+    'Minor Increase (2 to 5p)',  
+    'Limited Change (±2p)',  
+    'Minor Decrease (-5 to -2p)',
+    'Moderate Decrease (-5 to -15p)', 
+    'Major Decrease (-15p or less)'
+]
+
+ax = sns.swarmplot(data=df, 
+                   x="CI_index_2021", 
+                   y="nuclear_role_change",
+                   order=cat_order,
+                   size=10,
+                   palette="Dark2"
+           )
+
+sns.despine()
+
+n_value = []
+n_value = []
+for i in cat_order:
+    val = (
+        df.copy()
+        .query(f'nuclear_role_change == "{i}"')
+        .reset_index()
+        .count()[0]
+    )
+    n_value.append(val)
+    
+max_value = max(df['CI_index_2021'])
+separator=' '
+
+plt.xlim(0, max_value+0.4)
+
+for i in range(len(n_value)):
+    ax.annotate(separator.join(['n:', str(n_value[i])]), 
+                xy = (max_value+0.3, i))
+
+x = df['CI_index_2021']
+names = df['Area']
+
+for i, name in enumerate(names):
+    if name in ['Japan', 'Germany', 'Lithuania']:
+        ax.annotate(name, 
+                    xy = (x[i]+0.03, 6))
+    
+plt.ylabel(f"Percentage point change in nuclear's share of electricity mix")
+plt.xlabel(f"2021 CI index (2000 = 1)")
+plt.suptitle(f"CI change in relation to nuclear's changing role")
+plt.title(f'Excludes countries without nuclear fleets in 2021 or where data is unavailable.')
+
+plt.show()
+"""
+
+###########################################
+###########################################
+
+"""
+sns.set_context("talk")
+sns.set_style("ticks", {'axes.grid' : True})
+
+plt.figure(figsize=(15,10))
+
+df = data_master.copy().query("Demand_TWh2021 > 1 & area_type == 'Country'")
+
+cat_order = [
+    'Major Source (30+)', 'Moderate Source (10-30)', 'Minor Source (<10)','Non-Nuclear', 
+    #'Major Increase', 'Moderate Increase', 'Minor Increase', 'Limited Change', 'Minor Decrease', 'Moderate Decrease', 'Major Decrease','Non-Nuclear Power','Data Unavailable'
+]
+
+ax = sns.scatterplot(
+    data=df, 
+    x="CI_2021", 
+    y="CI_2000", 
+    hue="nuclear_size_cat", 
+    hue_order = cat_order,
+    legend=True, 
+    palette= ['Red', 'Lightcoral', 'Peachpuff', 'Gray'] #"Dark2"
+)
+
+
+X_plot = np.linspace(0, 1000, 1000)
+Y_plot = X_plot
+plt.plot(X_plot, Y_plot, color='Darkgray', linestyle="--")
+
+
+sns.despine()
+
+plt.xlim(0, None)
+plt.ylim(0, None)
+
+plt.ylabel(f'CI 2000 (gCO2e/kWh)')
+plt.xlabel('CI 2021 (gCO2e/kWh)')
+plt.suptitle(f'Carbon intensity performance analysis')
+plt.title(f'Only 1+ TWh demand economies included. Lower left corner indicates best-in-class performance.\nBeing above the dotted line indicates CI improvement from 2000 to 2021.')
+
+y = data_master['CI_2000']
+x = data_master['CI_2021']
+names = data_master['Area']
+
+for i, name in enumerate(names):
+    if name in ['Japan', 'Germany', 'Lithuania']:
+        ax.annotate(name, (x[i], y[i]))
+        
+plt.legend(title='% Nuclear in mix (2021)', loc='upper left')
+
+plt.show()
+"""
+
+###########################################
+###########################################
+
+"""
+sns.set_theme(style="ticks")
+
+
+sns.set_context("talk")
+sns.set_style("ticks", {'axes.grid' : True})
+
+plt.figure(figsize=(15,15))
+
+ax = sns.pairplot(corr_table)
+
+sns.despine()
+
+plt.show()
+"""
+
+###########################################
+###########################################
